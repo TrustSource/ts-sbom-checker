@@ -241,7 +241,7 @@ These requirements of the TR cannot be checked from the file alone:
 Issues and pull requests are welcome. Please run the checks before opening a pull request:
 
 ```bash
-pip install -e '.[dev]'
+pip install --group dev -e .   # pip >= 25.1
 ruff check src tests
 pytest
 ```

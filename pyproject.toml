@@ -31,7 +31,10 @@ dependencies = [
     "click>=8.1",
 ]
 
-[project.optional-dependencies]
+# Development tools are a dependency group (PEP 735), not an extra: they are not distributed and
+# must not appear in the package metadata (Requires-Dist), where SBOM scanners would pick them up.
+# Install with: pip install --group dev -e .   (pip >= 25.1)
+[dependency-groups]
 dev = ["pytest>=8", "ruff>=0.6", "build>=1.2"]
 
 [project.scripts]

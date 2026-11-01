@@ -21,6 +21,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Command `ts-sbom-checker` with text and JSON output, `--fail-on`, `--max-failures`, `--max-schema-errors`,
   `--max-bytes`, stdin support and exit codes 0 / 1 / 2.
 - CI workflow (ruff, pytest on Python 3.10 to 3.13).
+- Development tools (pytest, ruff, build) as dependency group `dev` (PEP 735), so they do not appear in the package
+  metadata or in SBOM scans of the package.
 - Release workflow: PyPI upload for tags `X.Y.Z`, with checks of tag, package version and changelog entry.
 - TrustSource dependency scan workflow (project `ts-sbom-checker`).
 - Bandit workflow: SARIF result imported into TrustSource (`/core/tests/sarif`) on pushes to `main`.

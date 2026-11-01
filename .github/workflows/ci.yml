@@ -31,7 +31,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-      - run: pip install -e '.[dev]'
+      - run: |
+          python -m pip install --upgrade 'pip>=25.1'
+          pip install --group dev -e .
       - run: pytest
       - name: Smoke test of the command
         run: ts-sbom-checker tests/fixtures/cdx-1.6-compliant.json tests/fixtures/spdx-3.0.1-compliant.json
