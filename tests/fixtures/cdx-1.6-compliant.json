@@ -1,0 +1,188 @@
+{
+  "bomFormat": "CycloneDX",
+  "specVersion": "1.6",
+  "serialNumber": "urn:uuid:3e671687-395b-41f5-a30f-a58921a69b79",
+  "version": 1,
+  "metadata": {
+    "timestamp": "2026-10-01T12:00:00Z",
+    "manufacturer": {
+      "name": "ACME GmbH",
+      "contact": [
+        {
+          "name": "SBOM team",
+          "email": "sbom@acme.example"
+        }
+      ]
+    },
+    "component": {
+      "type": "application",
+      "bom-ref": "acme-app",
+      "name": "acme-app",
+      "version": "2.1.0",
+      "manufacturer": {
+        "name": "ACME GmbH",
+        "url": [
+          "https://acme.example"
+        ]
+      },
+      "licenses": [
+        {
+          "expression": "Apache-2.0 WITH LLVM-exception",
+          "acknowledgement": "concluded"
+        }
+      ],
+      "purl": "pkg:generic/acme/acme-app@2.1.0",
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://downloads.acme.example/acme-app-2.1.0.jar",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ]
+        },
+        {
+          "type": "source-distribution",
+          "url": "https://git.acme.example/acme-app/-/tree/v2.1.0"
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:filename",
+          "value": "acme-app-2.1.0.jar"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "structured"
+        }
+      ]
+    }
+  },
+  "components": [
+    {
+      "type": "library",
+      "bom-ref": "pkg:maven/org.example/util@1.4.2",
+      "group": "org.example",
+      "name": "util",
+      "version": "1.4.2",
+      "manufacturer": {
+        "name": "Example Org",
+        "contact": [
+          {
+            "email": "dev@example.org"
+          }
+        ]
+      },
+      "licenses": [
+        {
+          "license": {
+            "id": "MIT",
+            "acknowledgement": "concluded"
+          }
+        },
+        {
+          "license": {
+            "id": "MIT",
+            "acknowledgement": "declared"
+          }
+        }
+      ],
+      "purl": "pkg:maven/org.example/util@1.4.2",
+      "cpe": "cpe:2.3:a:example:util:1.4.2:*:*:*:*:*:*:*",
+      "externalReferences": [
+        {
+          "type": "distribution",
+          "url": "https://repo.example.org/util-1.4.2.jar",
+          "hashes": [
+            {
+              "alg": "SHA-512",
+              "content": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+            }
+          ]
+        }
+      ],
+      "properties": [
+        {
+          "name": "bsi:component:filename",
+          "value": "util-1.4.2.jar"
+        },
+        {
+          "name": "bsi:component:executable",
+          "value": "executable"
+        },
+        {
+          "name": "bsi:component:archive",
+          "value": "archive"
+        },
+        {
+          "name": "bsi:component:structured",
+          "value": "structured"
+        },
+        {
+          "name": "bsi:component:effectiveLicence",
+          "value": "Apache-2.0"
+        }
+      ]
+    },
+    {
+      "type": "framework",
+      "bom-ref": "runtime",
+      "name": "runtime",
+      "version": "17.0.9",
+      "manufacturer": {
+        "name": "Runtime Project",
+        "url": [
+          "https://runtime.example.net"
+        ]
+      },
+      "externalReferences": [
+        {
+          "type": "bom",
+          "url": "https://runtime.example.net/sbom/17.0.9.cdx.json"
+        }
+      ]
+    }
+  ],
+  "dependencies": [
+    {
+      "ref": "acme-app",
+      "dependsOn": [
+        "pkg:maven/org.example/util@1.4.2",
+        "runtime"
+      ]
+    },
+    {
+      "ref": "pkg:maven/org.example/util@1.4.2",
+      "dependsOn": []
+    },
+    {
+      "ref": "runtime",
+      "dependsOn": []
+    }
+  ],
+  "compositions": [
+    {
+      "aggregate": "complete",
+      "dependencies": [
+        "acme-app",
+        "pkg:maven/org.example/util@1.4.2"
+      ]
+    },
+    {
+      "aggregate": "unknown",
+      "dependencies": [
+        "runtime"
+      ]
+    }
+  ]
+}

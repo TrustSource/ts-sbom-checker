@@ -1,0 +1,47 @@
+{
+  "spdxVersion": "SPDX-2.3",
+  "dataLicense": "CC0-1.0",
+  "SPDXID": "SPDXRef-DOCUMENT",
+  "name": "acme-app-2.1.0",
+  "documentNamespace": "https://acme.example/spdx/acme-app-2.1.0-3e671687",
+  "creationInfo": {
+    "created": "2026-10-01T12:00:00Z",
+    "creators": ["Organization: ACME GmbH (sbom@acme.example)", "Tool: acme-sbom-1.0"]
+  },
+  "documentDescribes": ["SPDXRef-acme-app"],
+  "packages": [
+    {
+      "SPDXID": "SPDXRef-acme-app",
+      "name": "acme-app",
+      "versionInfo": "2.1.0",
+      "packageFileName": "acme-app-2.1.0.jar",
+      "originator": "Organization: ACME GmbH (dev@acme.example)",
+      "downloadLocation": "https://downloads.acme.example/acme-app-2.1.0.jar",
+      "filesAnalyzed": false,
+      "checksums": [{ "algorithm": "SHA512", "checksumValue": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc" }],
+      "licenseConcluded": "Apache-2.0",
+      "licenseDeclared": "Apache-2.0",
+      "copyrightText": "NOASSERTION",
+      "externalRefs": [
+        { "referenceCategory": "PACKAGE-MANAGER", "referenceType": "purl", "referenceLocator": "pkg:generic/acme/acme-app@2.1.0" }
+      ]
+    },
+    {
+      "SPDXID": "SPDXRef-util",
+      "name": "util",
+      "versionInfo": "1.4.2",
+      "packageFileName": "lib/util-1.4.2.jar",
+      "supplier": "Organization: Example Org (dev@example.org)",
+      "downloadLocation": "NOASSERTION",
+      "filesAnalyzed": false,
+      "licenseConcluded": "NOASSERTION",
+      "licenseDeclared": "MIT",
+      "copyrightText": "NOASSERTION"
+    }
+  ],
+  "relationships": [
+    { "spdxElementId": "SPDXRef-DOCUMENT", "relationshipType": "DESCRIBES", "relatedSpdxElement": "SPDXRef-acme-app" },
+    { "spdxElementId": "SPDXRef-acme-app", "relationshipType": "DEPENDS_ON", "relatedSpdxElement": "SPDXRef-util" },
+    { "spdxElementId": "SPDXRef-util", "relationshipType": "DEPENDS_ON", "relatedSpdxElement": "NONE" }
+  ]
+}

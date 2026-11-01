@@ -1,0 +1,83 @@
+name: Release
+
+# Publishes the package to PyPI for a version tag "X.Y.Z" (without "v").
+# PYPI_TOKEN is an organisation secret of TrustSource.
+
+on:
+  push:
+    tags:
+      - '[0-9]+.[0-9]+.[0-9]+'
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Existing version tag to publish
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+jobs:
+  check-version:
+    runs-on: ubuntu-latest
+    outputs:
+      tag: ${{ steps.release.outputs.tag }}
+    steps:
+      - name: Select release tag
+        id: release
+        env:
+          RELEASE_TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+        run: echo "tag=$RELEASE_TAG" >> "$GITHUB_OUTPUT"
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.release.outputs.tag }}
+      - name: Check that tag matches package version
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          version=$(grep -E '^version' pyproject.toml | head -1 | sed 's/version = //' | tr -d "'\"")
+          if [ "$version" != "$RELEASE_TAG" ]; then
+            echo "Tag '$RELEASE_TAG' does not match pyproject.toml version '$version'."
+            exit 1
+          fi
+      - name: Check that CHANGELOG.md has an entry for the version
+        env:
+          RELEASE_TAG: ${{ steps.release.outputs.tag }}
+        run: |
+          if ! grep -qE "^## \[${RELEASE_TAG//./\\.}\]" CHANGELOG.md; then
+            echo "CHANGELOG.md has no entry '## [$RELEASE_TAG]'."
+            exit 1
+          fi
+
+  build-and-push-pypi:
+    needs: check-version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ needs.check-version.outputs.tag }}
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+      - name: Run tests
+        run: |
+          pip install -e '.[dev]'
+          pytest
+      - name: Build Python package
+        run: |
+          python -m pip install --upgrade build
+          python -m build
+      - name: Smoke test of the built wheel
+        run: |
+          python -m venv /tmp/wheel-test
+          /tmp/wheel-test/bin/pip install dist/*.whl
+          /tmp/wheel-test/bin/ts-sbom-checker --version
+          /tmp/wheel-test/bin/ts-sbom-checker tests/fixtures/cdx-1.6-compliant.json
+      - name: Publish to PyPI
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
