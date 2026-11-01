@@ -1,3 +1,5 @@
+![Supported Versions](https://img.shields.io/badge/Python-%203.12,%203.13,%203.14-blue) [![License](https://img.shields.io/badge/License-Apache--2.0-green)](LICENSE)
+
 # ts-sbom-checker
 
 Checks a Software Bill of Materials (SBOM) against
