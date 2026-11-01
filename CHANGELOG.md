@@ -23,6 +23,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - CI workflow (ruff, pytest on Python 3.10 to 3.13).
 - Release workflow: PyPI upload for tags `X.Y.Z`, with checks of tag, package version and changelog entry.
 - TrustSource dependency scan workflow (project `ts-sbom-checker`).
+- Bandit workflow: SARIF result imported into TrustSource (`/core/tests/sarif`) on pushes to `main`.
 
 [Unreleased]: https://github.com/TrustSource/ts-sbom-checker/compare/0.1.0...HEAD
 [0.1.0]: https://github.com/TrustSource/ts-sbom-checker/releases/tag/0.1.0

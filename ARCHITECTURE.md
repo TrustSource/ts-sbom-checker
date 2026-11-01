@@ -75,6 +75,10 @@ use, so compliant documents never pay for it.
   the wheel and uploads to PyPI with the organisation secret `PYPI_TOKEN`. No Docker image is published.
 - Dependency scan: `trustsource-scan.yml` runs `TrustSource/ts-scan-action@v1` on pushes to and pull requests against
   `main` and uploads to the TrustSource project `ts-sbom-checker` (organisation secret `TRUSTSOURCE_API_KEY`).
+- Security linting: `bandit.yml` runs Bandit on `src` (pushes, pull requests, weekly) and writes SARIF. On pushes to
+  `main`, scheduled and manual runs the SARIF is imported into TrustSource with `curl`:
+  `POST <TS_API_BASE_URL>/core/tests/sarif` (base URL `https://api.trustsource.io/v2`, header `x-api-key`, query
+  `projectName` / `moduleName` `ts-sbom-checker`, `branch`, `tag` = commit SHA). Pull requests only scan.
 - Lambda: `eacg-gmbh/ts-lambda`, `sbom-quality/`, Python 3.13, `ts-sbom-checker==X.Y.Z` in `requirements.txt`,
   logging via the `ts-shared-logging` layer. The handler is not part of this repository.
 

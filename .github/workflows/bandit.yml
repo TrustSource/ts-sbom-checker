@@ -1,0 +1,69 @@
+name: Bandit
+
+# Security linting of the package with Bandit. The SARIF result is kept as a workflow artifact and,
+# on pushes to main and scheduled runs, imported into TrustSource
+# (POST <base_url>/core/tests/sarif, project and module "ts-sbom-checker").
+# TRUSTSOURCE_API_KEY is an organisation secret of TrustSource. Pull requests only scan, they do not
+# upload (no secrets for pull requests from forks, and no test results for unmerged code).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '33 7 * * 2'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+env:
+  # API version belongs to the base URL, never to the method paths
+  TS_API_BASE_URL: https://api.trustsource.io/v2
+  TS_PROJECT_NAME: ts-sbom-checker
+  TS_MODULE_NAME: ts-sbom-checker
+
+jobs:
+  bandit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+
+      - name: Run Bandit
+        run: |
+          pip install 'bandit[sarif]'
+          # findings do not fail the job here; they are reviewed in TrustSource
+          bandit -r src -f sarif -o bandit.sarif --exit-zero
+          bandit -r src -f screen --exit-zero
+
+      - name: Keep SARIF as artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-sarif
+          path: bandit.sarif
+
+      - name: Import SARIF into TrustSource
+        if: github.event_name != 'pull_request'
+        env:
+          TS_API_KEY: ${{ secrets.TRUSTSOURCE_API_KEY }}
+          BRANCH: ${{ github.ref_name }}
+          COMMIT: ${{ github.sha }}
+        run: |
+          if [ -z "$TS_API_KEY" ]; then
+            echo "TRUSTSOURCE_API_KEY is not available to this repository."
+            exit 1
+          fi
+          curl --silent --show-error --fail-with-body \
+            --request POST "$TS_API_BASE_URL/core/tests/sarif" \
+            --header "x-api-key: $TS_API_KEY" \
+            --header "Content-Type: application/json" \
+            --url-query "projectName=$TS_PROJECT_NAME" \
+            --url-query "moduleName=$TS_MODULE_NAME" \
+            --url-query "branch=$BRANCH" \
+            --url-query "tag=$COMMIT" \
+            --data-binary @bandit.sarif
