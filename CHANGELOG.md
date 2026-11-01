@@ -1,0 +1,28 @@
+# Changelog
+
+All notable changes to this project are documented in this file.
+The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and the project adheres to
+[Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [Unreleased]
+
+## [0.1.0] - 2026-11-01
+
+### Added
+
+- Python package `ts-sbom-checker` (import `ts_sbom_checker`), ported from the JavaScript implementation of the
+  TrustSource SBOM quality Lambda (`eacg-gmbh/ts-lambda`, `sbom-quality/`).
+- Format detection and schema validation for CycloneDX 1.5 / 1.6 / 1.7 and SPDX 2.1 / 2.2 / 2.3 / 3.0.0 / 3.0.1 (JSON)
+  against the bundled official schemas, with line numbers and noise reduction for `oneOf` / `anyOf`.
+- 24 tests according to BSI TR-03183-2 v2.1.0 (6 document tests, 18 component tests), each failure with component,
+  `ref` and line number.
+- Library API `check_sbom()` returning `(status_code, report)` with the report format of the Lambda, `preload()` for
+  Lambda init phases and a `log.step()` hook.
+- Command `ts-sbom-checker` with text and JSON output, `--fail-on`, `--max-failures`, `--max-schema-errors`,
+  `--max-bytes`, stdin support and exit codes 0 / 1 / 2.
+- CI workflow (ruff, pytest on Python 3.10 to 3.13).
+- Release workflow: PyPI upload for tags `X.Y.Z`, with checks of tag, package version and changelog entry.
+- TrustSource dependency scan workflow (project `ts-sbom-checker`).
+
+[Unreleased]: https://github.com/TrustSource/ts-sbom-checker/compare/0.1.0...HEAD
+[0.1.0]: https://github.com/TrustSource/ts-sbom-checker/releases/tag/0.1.0

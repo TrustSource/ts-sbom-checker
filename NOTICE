@@ -1,0 +1,29 @@
+ts-sbom-checker
+Copyright 2026 EACG GmbH (TrustSource)
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE).
+
+It bundles the following unmodified third-party files in src/ts_sbom_checker/schemas/:
+
+CycloneDX JSON schemas
+  bom-1.5.schema.json, bom-1.6.schema.json, bom-1.7.schema.json, spdx.schema.json,
+  jsf-0.82.schema.json, cryptography-defs.schema.json
+  Source:  https://github.com/CycloneDX/specification (branch master, directory schema)
+  Licence: Apache License 2.0
+  Copyright OWASP Foundation / Ecma International (CycloneDX)
+
+SPDX 2 JSON schemas
+  spdx-2.2.schema.json   Source: https://github.com/spdx/spdx-spec (tag v2.2.2, schemas/spdx-schema.json)
+  spdx-2.3.schema.json   Source: https://github.com/spdx/spdx-spec (tag v2.3, schemas/spdx-schema.json)
+  Licence: Creative Commons Attribution 3.0 Unported (CC-BY-3.0)
+  Copyright The Linux Foundation and its contributors (SPDX)
+
+SPDX 3 JSON schema
+  spdx-3.0.1.schema.json Source: https://github.com/spdx/spdx-spec (branch gh-pages, v3.0.1/rdf/schema.json)
+  Licence: Community Specification License 1.0 (Community-Spec-1.0); pre-existing portions
+           Creative Commons Attribution 3.0 Unported (CC-BY-3.0)
+  Copyright The Linux Foundation and its contributors (SPDX)
+
+"BSI" and "TR-03183" refer to the Federal Office for Information Security (Bundesamt fuer
+Sicherheit in der Informationstechnik) and its Technical Guideline. This project is not an
+official tool of the BSI and is not endorsed by it.

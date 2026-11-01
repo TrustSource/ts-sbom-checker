@@ -1,0 +1,226 @@
+{
+  "@context": "https://spdx.org/rdf/3.0.1/spdx-context.jsonld",
+  "@graph": [
+    {
+      "type": "CreationInfo",
+      "@id": "_:creationinfo",
+      "createdBy": [
+        "https://acme.example/spdx/Agent/acme"
+      ],
+      "specVersion": "3.0.1",
+      "created": "2026-10-01T12:00:00Z"
+    },
+    {
+      "type": "Organization",
+      "spdxId": "https://acme.example/spdx/Agent/acme",
+      "name": "ACME GmbH",
+      "creationInfo": "_:creationinfo",
+      "externalIdentifier": [
+        {
+          "type": "ExternalIdentifier",
+          "externalIdentifierType": "email",
+          "identifier": "sbom@acme.example"
+        }
+      ]
+    },
+    {
+      "type": "Organization",
+      "spdxId": "https://acme.example/spdx/Agent/example-org",
+      "name": "Example Org",
+      "creationInfo": "_:creationinfo",
+      "externalIdentifier": [
+        {
+          "type": "ExternalIdentifier",
+          "externalIdentifierType": "other",
+          "identifier": "https://example.org"
+        }
+      ]
+    },
+    {
+      "type": "SpdxDocument",
+      "spdxId": "https://acme.example/spdx/Document/acme-app-2.1.0",
+      "creationInfo": "_:creationinfo",
+      "rootElement": [
+        "https://acme.example/spdx/Sbom/acme-app-2.1.0"
+      ],
+      "profileConformance": [
+        "core",
+        "software",
+        "simpleLicensing"
+      ]
+    },
+    {
+      "type": "software_Sbom",
+      "spdxId": "https://acme.example/spdx/Sbom/acme-app-2.1.0",
+      "creationInfo": "_:creationinfo",
+      "rootElement": [
+        "https://acme.example/spdx/Package/acme-app"
+      ],
+      "software_sbomType": [
+        "build"
+      ]
+    },
+    {
+      "type": "software_Package",
+      "spdxId": "https://acme.example/spdx/Package/acme-app",
+      "creationInfo": "_:creationinfo",
+      "name": "acme-app",
+      "software_packageVersion": "2.1.0",
+      "originatedBy": [
+        "https://acme.example/spdx/Agent/acme"
+      ],
+      "externalIdentifier": [
+        {
+          "type": "ExternalIdentifier",
+          "externalIdentifierType": "packageUrl",
+          "identifier": "pkg:generic/acme/acme-app@2.1.0"
+        }
+      ]
+    },
+    {
+      "type": "software_File",
+      "spdxId": "https://acme.example/spdx/File/acme-app-2.1.0.jar",
+      "creationInfo": "_:creationinfo",
+      "name": "acme-app-2.1.0.jar",
+      "software_additionalPurpose": [
+        "executable",
+        "archive",
+        "container"
+      ],
+      "verifiedUsing": [
+        {
+          "type": "Hash",
+          "algorithm": "sha512",
+          "hashValue": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ],
+      "externalRef": [
+        {
+          "type": "ExternalRef",
+          "externalRefType": "binaryArtifact",
+          "locator": [
+            "https://downloads.acme.example/acme-app-2.1.0.jar"
+          ]
+        }
+      ]
+    },
+    {
+      "type": "software_Package",
+      "spdxId": "https://acme.example/spdx/Package/util",
+      "creationInfo": "_:creationinfo",
+      "name": "util",
+      "software_packageVersion": "1.4.2",
+      "originatedBy": [
+        "https://acme.example/spdx/Agent/example-org"
+      ],
+      "software_packageUrl": "pkg:maven/org.example/util@1.4.2"
+    },
+    {
+      "type": "software_File",
+      "spdxId": "https://acme.example/spdx/File/util-1.4.2.jar",
+      "creationInfo": "_:creationinfo",
+      "name": "util-1.4.2.jar",
+      "software_additionalPurpose": [
+        "executable",
+        "archive",
+        "container"
+      ],
+      "verifiedUsing": [
+        {
+          "type": "Hash",
+          "algorithm": "sha512",
+          "hashValue": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+        }
+      ]
+    },
+    {
+      "type": "simplelicensing_LicenseExpression",
+      "spdxId": "https://acme.example/spdx/License/apache",
+      "creationInfo": "_:creationinfo",
+      "simplelicensing_licenseExpression": "Apache-2.0"
+    },
+    {
+      "type": "simplelicensing_LicenseExpression",
+      "spdxId": "https://acme.example/spdx/License/mit-or-apache",
+      "creationInfo": "_:creationinfo",
+      "simplelicensing_licenseExpression": "MIT OR Apache-2.0"
+    },
+    {
+      "type": "Relationship",
+      "spdxId": "https://acme.example/spdx/Rel/1",
+      "creationInfo": "_:creationinfo",
+      "from": "https://acme.example/spdx/Package/acme-app",
+      "relationshipType": "hasDistributionArtifact",
+      "to": [
+        "https://acme.example/spdx/File/acme-app-2.1.0.jar"
+      ],
+      "completeness": "complete"
+    },
+    {
+      "type": "Relationship",
+      "spdxId": "https://acme.example/spdx/Rel/2",
+      "creationInfo": "_:creationinfo",
+      "from": "https://acme.example/spdx/Package/util",
+      "relationshipType": "hasDistributionArtifact",
+      "to": [
+        "https://acme.example/spdx/File/util-1.4.2.jar"
+      ],
+      "completeness": "complete"
+    },
+    {
+      "type": "Relationship",
+      "spdxId": "https://acme.example/spdx/Rel/3",
+      "creationInfo": "_:creationinfo",
+      "from": "https://acme.example/spdx/Package/acme-app",
+      "relationshipType": "dependsOn",
+      "to": [
+        "https://acme.example/spdx/Package/util"
+      ],
+      "completeness": "complete"
+    },
+    {
+      "type": "Relationship",
+      "spdxId": "https://acme.example/spdx/Rel/4",
+      "creationInfo": "_:creationinfo",
+      "from": "https://acme.example/spdx/Package/util",
+      "relationshipType": "dependsOn",
+      "to": [
+        "https://spdx.org/rdf/3.0.1/terms/Core/NoneElement"
+      ],
+      "completeness": "complete"
+    },
+    {
+      "type": "Relationship",
+      "spdxId": "https://acme.example/spdx/Rel/5",
+      "creationInfo": "_:creationinfo",
+      "from": "https://acme.example/spdx/Package/acme-app",
+      "relationshipType": "hasConcludedLicense",
+      "to": [
+        "https://acme.example/spdx/License/apache"
+      ],
+      "completeness": "complete"
+    },
+    {
+      "type": "Relationship",
+      "spdxId": "https://acme.example/spdx/Rel/6",
+      "creationInfo": "_:creationinfo",
+      "from": "https://acme.example/spdx/Package/util",
+      "relationshipType": "hasConcludedLicense",
+      "to": [
+        "https://acme.example/spdx/License/mit-or-apache"
+      ],
+      "completeness": "complete"
+    },
+    {
+      "type": "Relationship",
+      "spdxId": "https://acme.example/spdx/Rel/7",
+      "creationInfo": "_:creationinfo",
+      "from": "https://acme.example/spdx/Package/util",
+      "relationshipType": "hasDeclaredLicense",
+      "to": [
+        "https://acme.example/spdx/License/mit-or-apache"
+      ],
+      "completeness": "complete"
+    }
+  ]
+}
