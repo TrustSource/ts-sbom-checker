@@ -10,6 +10,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ### Added
 
+- Supported Python versions: 3.12 and newer (AWS Lambda currently offers 3.13 and 3.14).
+
 - Python package `ts-sbom-checker` (import `ts_sbom_checker`), ported from the JavaScript implementation of the
   TrustSource SBOM quality Lambda (`eacg-gmbh/ts-lambda`, `sbom-quality/`).
 - Format detection and schema validation for CycloneDX 1.5 / 1.6 / 1.7 and SPDX 2.1 / 2.2 / 2.3 / 3.0.0 / 3.0.1 (JSON)
@@ -20,7 +22,7 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   Lambda init phases and a `log.step()` hook.
 - Command `ts-sbom-checker` with text and JSON output, `--fail-on`, `--max-failures`, `--max-schema-errors`,
   `--max-bytes`, stdin support and exit codes 0 / 1 / 2.
-- CI workflow (ruff, pytest on Python 3.10 to 3.13).
+- CI workflow (ruff, pytest on Python 3.12 to 3.14).
 - Development tools (pytest, ruff, build) as dependency group `dev` (PEP 735), so they do not appear in the package
   metadata or in SBOM scans of the package.
 - Release workflow: PyPI upload for tags `X.Y.Z`, with checks of tag, package version and changelog entry.

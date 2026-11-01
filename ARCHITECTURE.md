@@ -69,7 +69,7 @@ use, so compliant documents never pay for it.
 
 - Distribution: PyPI package `ts-sbom-checker` (sdist and wheel; pure Python, depends on jsonschema-rs which ships
   abi3 wheels for Linux x86_64/aarch64, macOS and Windows).
-- CI: GitHub Actions `ci.yml` (ruff, pytest on Python 3.10-3.13, smoke test of the command).
+- CI: GitHub Actions `ci.yml` (ruff, pytest on Python 3.12-3.14, smoke test of the command).
 - Release: `release.yml`, triggered by a tag `X.Y.Z` (without "v") or manually with an existing tag. It checks that
   tag, `pyproject.toml` version and a `CHANGELOG.md` entry match, runs the tests, builds sdist and wheel, smoke-tests
   the wheel and uploads to PyPI with the organisation secret `PYPI_TOKEN`. No Docker image is published.
@@ -113,7 +113,7 @@ Performance (local, Apple Silicon, Python 3.12): CycloneDX with 2 700 components
   linear in Rust, so the custom replacement needed with Ajv is unnecessary.
 - **Consequences:** SPDX 3 documents with 2 000 packages validate in about 1 s. The package depends on a compiled
   extension; abi3 wheels (cp310+) exist for the relevant platforms, but Lambda packaging must install the Linux wheel
-  (x86_64: `manylinux2014`, arm64: `manylinux_2_28`; both fit the python3.13 runtime on Amazon Linux 2023), e.g. via
+  (x86_64: `manylinux2014`, arm64: `manylinux_2_28`; both fit the python3.13 and python3.14 runtimes on Amazon Linux 2023), e.g. via
   `sam build --use-container` or `pip install --platform manylinux_2_28_aarch64 --only-binary=:all:`. Error
   messages are generated from the error kind (jsonschema-rs embeds whole instances in its own messages).
 

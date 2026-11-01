@@ -25,7 +25,7 @@ pipx run ts-sbom-checker sbom.json # without installation
 uvx ts-sbom-checker sbom.json      # without installation
 ```
 
-Python 3.10 or newer is required.
+Python 3.12 or newer is required.
 
 ## Usage
 
