@@ -1,3 +1,5 @@
+![Supported Versions](https://img.shields.io/badge/Python-%203.12,%203.13,%203.14-blue) [![License](https://img.shields.io/badge/License-Apache--2.0-green)](LICENSE)
+
 # ts-sbom-checker
 
 Checks a Software Bill of Materials (SBOM) against
@@ -25,7 +27,7 @@ pipx run ts-sbom-checker sbom.json # without installation
 uvx ts-sbom-checker sbom.json      # without installation
 ```
 
-Python 3.10 or newer is required.
+Python 3.12 or newer is required.
 
 ## Usage
 
@@ -241,7 +243,7 @@ These requirements of the TR cannot be checked from the file alone:
 Issues and pull requests are welcome. Please run the checks before opening a pull request:
 
 ```bash
-pip install -e '.[dev]'
+pip install --group dev -e .   # pip >= 25.1
 ruff check src tests
 pytest
 ```
