@@ -152,6 +152,19 @@ def test_spdx_3_0_0_uses_3_0_1_schema_and_fails_format_version(spdx3):
     assert result["schemaValid"] is True, result["schemaErrors"]
     assert failed_tests(result) == ["format-version"]
     assert any("3.0.0" in n for n in result["notes"])
+    assert any("TR section 7" in n for n in result["notes"])
+
+
+def test_sbom_uri_is_the_spdx_id_of_the_software_sbom(spdx3):
+    """TR table 10: the SBOM-URI is the spdxId of the software_Sbom, not of the SpdxDocument."""
+    import json
+
+    sbom_id = f"{ID}Sbom/acme-app-2.1.0"
+    bad_id = f"{ID}Sbom/äpp-2.1.0"  # valid IRI for the schema, but not an ASCII URI (TR 8.1.10)
+    doc = json.loads(json.dumps(spdx3).replace(sbom_id, bad_id))
+    item = only_failure(doc, "sbom-uri")
+    assert "non-ASCII" in item["message"]
+    assert item["line"] == line_of(doc, f'"spdxId": "{bad_id}"')
 
 
 def test_schema_error_names_the_offending_element_not_every_one_of_branch(spdx3):

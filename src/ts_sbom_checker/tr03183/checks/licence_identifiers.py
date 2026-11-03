@@ -3,6 +3,12 @@ from ..base import Finding, TrTest
 
 
 def _check(c, ctx):
+    # BSI taxonomy: bsi:component:effectiveLicence MUST occur exactly once per component (if used)
+    if ctx.model.exactly_one_property and len(c.effective_licences) > 1:
+        return Finding(
+            f'property "bsi:component:effectiveLicence" occurs {len(c.effective_licences)} times, it must occur exactly once',
+            c.effective_licences[1].path,
+        )
     for entry in [*c.distribution_licences, *c.effective_licences]:
         problem = licence_entry_problem(entry.kind, entry.value)
         if problem:

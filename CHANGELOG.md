@@ -28,6 +28,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - Release workflow: PyPI upload for tags `X.Y.Z`, with checks of tag, package version and changelog entry.
 - TrustSource dependency scan workflow (project `ts-sbom-checker`).
 - Bandit workflow: SARIF result imported into TrustSource (`/core/tests/sarif`) on pushes to `main`.
+- Cross-check against the original text of TR-03183-2 v2.1.0 and the BSI property taxonomy v0.1.2:
+  - SPDX 3: the SBOM-URI is taken from the `spdxId` of the `software_Sbom` (TR table 10), the `SpdxDocument` is only
+    the fallback.
+  - CycloneDX: `bsi:component:effectiveLicence` must occur at most once per component (`licence-identifiers`).
+  - CycloneDX: hint for the deprecated `bsi:component:associatedLicences` (TR v2.0.0).
+  - Report note on the transitional rule (TR section 7) for CycloneDX 1.5, SPDX 2.2 / 2.3 and SPDX 3.0.0.
+  - README: XML is permitted by the TR but not read; logical primary components; notes on the TR text.
 
 [Unreleased]: https://github.com/TrustSource/ts-sbom-checker/compare/0.1.0...HEAD
 [0.1.0]: https://github.com/TrustSource/ts-sbom-checker/releases/tag/0.1.0
