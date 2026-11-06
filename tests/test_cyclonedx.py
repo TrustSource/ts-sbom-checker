@@ -170,6 +170,37 @@ def test_licence_identifiers_invalid_effective_licence():
     only_failure(with_util(lambda c, d: set_prop(c, "bsi:component:effectiveLicence", "Apache 2")), "licence-identifiers")
 
 
+@pytest.mark.parametrize("name", ["bsi:component:effectiveLicence", "bsi:component:effectiveLicense"])
+def test_effective_licence_accepts_both_spellings(name):
+    def mutate(c, d):
+        set_prop(c, "bsi:component:effectiveLicence")  # the fixture uses the taxonomy spelling
+        set_prop(c, name, "Apache 2")  # invalid on purpose: proves the property is read
+
+    item = only_failure(with_util(mutate), "licence-identifiers")
+    assert '"Apache 2"' in item["message"]
+
+
+def test_effective_licence_must_occur_exactly_once():
+    def mutate(c, d):
+        set_prop(c, "bsi:component:effectiveLicence", "Apache-2.0")
+        c["properties"].append({"name": "bsi:component:effectiveLicense", "value": "MIT"})
+
+    doc = with_util(mutate)
+    item = only_failure(doc, "licence-identifiers")
+    assert "occurs 2 times" in item["message"]
+    assert item["line"] == line_of(doc, '"bsi:component:effectiveLicense"') + 1
+
+
+def test_deprecated_associated_licences_gives_a_hint():
+    def mutate(c, d):
+        c["licenses"] = []
+        c["properties"].append({"name": "bsi:component:associatedLicences", "value": "Apache-2.0"})
+
+    item = only_failure(with_util(mutate), "component-distribution-licence")
+    assert "associatedLicences" in item["message"]
+    assert "deprecated" in item["message"]
+
+
 def test_licence_identifiers_name_only():
     def mutate(c, d):
         c["licenses"][0] = {"license": {"name": "MIT License", "acknowledgement": "concluded"}}
@@ -276,6 +307,14 @@ def test_cyclonedx_1_5_fails_format_version_with_note(cdx):
     assert "format-version" in failed_tests(result)
     assert "sbom-creator" not in failed_tests(result)
     assert any(re.search(r"CycloneDX 1\.5", n) for n in result["notes"])
+    assert any("TR section 7" in n for n in result["notes"])
+
+
+def test_no_transition_note_for_permitted_versions(cdx):
+    for version in ("1.6", "1.7"):
+        cdx["specVersion"] = version
+        _, result = check(cdx)
+        assert not any("TR section 7" in n for n in result["notes"])
 
 
 # ---- schema validation -------------------------------------------------------------------------

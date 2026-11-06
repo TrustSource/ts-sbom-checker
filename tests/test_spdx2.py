@@ -16,6 +16,7 @@ def test_schema_valid_never_compliant_with_note(spdx23):
     assert result["schemaValid"] is True
     assert result["summary"]["compliant"] is False
     assert any(re.search(r"SPDX 2\.x SBOM therefore cannot be TR-compliant", n) for n in result["notes"])
+    assert any("TR section 7" in n for n in result["notes"])
 
 
 def test_expected_failures(spdx23):

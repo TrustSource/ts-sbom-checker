@@ -302,8 +302,9 @@ def build(data: dict, fmt) -> Model:
     vuln_els = [e for e in elements if isinstance(e.obj.get("type"), str) and e.obj["type"].startswith("security_")]
     doc_id = _id_of(doc_el.obj) if doc_el else None
     sbom_id = _id_of(sbom_el.obj) if sbom_el else None
-    uri_id = next((x for x in (doc_id, sbom_id) if isinstance(x, str) and not x.startswith("_:")), None)
-    uri_owner = doc_el if uri_id == doc_id else sbom_el
+    # TR table 10 maps the SBOM-URI to the spdxId of the software_Sbom; the SpdxDocument is the fallback
+    uri_id = next((x for x in (sbom_id, doc_id) if isinstance(x, str) and not x.startswith("_:")), None)
+    uri_owner = sbom_el if uri_id == sbom_id else doc_el
 
     document = Document(
         path=doc_el.path if doc_el else [],

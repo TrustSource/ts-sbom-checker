@@ -88,6 +88,13 @@ An input error takes precedence over 1.
 All schemas are bundled; nothing is downloaded at runtime. Older versions are checked completely so you can see what
 would be missing after a migration, but they always fail `format-version`.
 
+The TR also permits **XML** (section 4); ts-sbom-checker reads JSON only.
+
+The check applies **TR-03183-2 v2.1.0**. Its predecessor v2.0.0 permitted CycloneDX 1.5 and SPDX 2.2.1 or newer and
+could be applied until 2026-02-20, six months after v2.1.0 was published. According to TR section 7, an SBOM that was
+compliant at its delivery date remains compliant. For CycloneDX 1.5, SPDX 2.2 / 2.3 and SPDX 3.0.0 the report therefore
+adds a note: such an SBOM fails `format-version` today, but may still be compliant if it was delivered under v2.0.0.
+
 ## The tests
 
 Category **required**: mandatory field of the TR (sections 4, 5.2.1, 5.2.2, 6.1). Category **additional**: fields of
@@ -140,7 +147,14 @@ Notes on the mapping:
   `component-version`, `dependency-reachable` and `component-bom-reference` run for them. The referenced SBOM is not
   loaded.
 - Both spellings are accepted where the TR and the format differ: `bsi:component:effectiveLicence` / `…License`,
-  `simplelicensing_` / `simpleLicensing_`, `externalIdentifier` / `externalIdentifiers`.
+  `simplelicensing_` / `simpleLicensing_`, `externalIdentifier` / `externalIdentifiers` (see
+  [Notes on the TR text](#notes-on-the-tr-text)).
+- The CycloneDX properties follow the [BSI property taxonomy](https://github.com/BSI-Bund/tr-03183-cyclonedx-property-taxonomy)
+  (v0.1.2): `executable`, `archive`, `structured` and `effectiveLicence` exactly once per component, `filename` at most
+  once. The deprecated `bsi:component:associatedLicences` (TR v2.0.0) is not evaluated; if present, the message of
+  `component-distribution-licence` points to the v2.1.0 mapping.
+- The SBOM-URI of an SPDX 3 document is the `spdxId` of the `software_Sbom` (TR table 10); the `spdxId` of the
+  `SpdxDocument` is only used if there is no `software_Sbom`.
 - Licence identifiers come from the SPDX licence list bundled with CycloneDX (`spdx.schema.json`), case-insensitive.
   `LicenseRef-…`, `DocumentRef-…:LicenseRef-…` and `AdditionRef-…` are allowed; `AND` / `OR` / `WITH` must be upper or
   lower case.
@@ -236,7 +250,31 @@ These requirements of the TR cannot be checked from the file alone:
 - whether an "additional" field exists (TR 5.2.3, 5.2.4),
 - conformance of referenced SBOMs (TR 5.1, 8.1.16),
 - whether a component is a logical (TR 3.2.2) or merely identified (TR 3.2.4) component; all are checked like fully
-  described components.
+  described components. For a logical component the TR does not require filename, hash or the three properties. This
+  often concerns the **primary component**, e.g. an application that consists of several files: if it is a logical
+  component, failures of `component-filename`, `component-hash-sha512`, `component-executable`, `component-archive`
+  and `component-structured` for it are not violations of the TR.
+
+## Notes on the TR text
+
+While implementing the mapping of TR appendix 8.2 (tables 8 to 12) we found a few places where the TR differs from the
+format specifications or from the BSI property taxonomy. ts-sbom-checker follows the format specification and accepts
+the spelling of the TR in addition where that is possible.
+
+| Place in TR v2.1.0 | TR writes | Format / taxonomy | ts-sbom-checker |
+|---|---|---|---|
+| Tables 8, 9 (SPDX 3) | `externalIdentifiers` | SPDX 3.0.1: `externalIdentifier` | accepts both |
+| Tables 9, 11, 12 (SPDX 3) | `simpleLicensing_LicenseExpression` | SPDX 3.0.1: `simplelicensing_LicenseExpression` | accepts both |
+| Table 11, other unique identifiers (SPDX 3) | `packageURL` | SPDX 3.0.1 enum: `packageUrl` | follows the schema |
+| Table 11, source code URI (SPDX 3) | `SourceArtifact` | SPDX 3.0.1 enum: `sourceArtifact` | case-insensitive |
+| Table 11, URI of the deployable form (SPDX 3) | `"binaryArtifact": "..."` as a property of `software_File` | no such property; `binaryArtifact` is an `externalRefType` | reads `externalRef[externalRefType=binaryArtifact].locator` of the file and `software_downloadLocation` of the package |
+| Tables 8, 9 (CycloneDX) | `"manufacturer": [{…}]` (array) | CycloneDX 1.6: an object (`organizationalEntity`) | follows the schema |
+| Table 12 (CycloneDX) | `bsi:component:effectiveLicense` | taxonomy: `bsi:component:effectiveLicence` | accepts both |
+| Table 8 vs. table 9 (SPDX 3) | URL of the SBOM creator as `urlScheme`, of the component creator as `other` | both are `externalIdentifierType` values | accepts both for both |
+
+"Licence" is the British spelling the TR and the taxonomy use throughout; the format specifications use the American
+"license". The mix in table 12 is therefore not a typo of one word but an inconsistency between the two documents,
+which can make tools miss the effective licence.
 
 ## Contributing
 

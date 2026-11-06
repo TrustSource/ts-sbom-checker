@@ -37,6 +37,22 @@ def _non_conformance_note(fmt: Format) -> str | None:
     return None
 
 
+# TR section 7: an SBOM that was compliant at its delivery date remains compliant. TR v2.0.0 permitted
+# CycloneDX >= 1.5 and SPDX >= 2.2.1; it could be applied until six months after v2.1.0 (2025-08-20).
+TRANSITION_NOTE = (
+    "This check applies TR-03183-2 v2.1.0. TR v2.0.0 permitted CycloneDX 1.5 and SPDX 2.2.1 or higher and could be "
+    "applied until 2026-02-20 (six months after v2.1.0). According to TR section 7, an SBOM that was compliant "
+    "at its delivery date remains compliant, so an SBOM delivered under v2.0.0 may still be compliant."
+)
+
+
+def _transition_note(fmt: Format) -> str | None:
+    older = (fmt.type == "CycloneDX" and fmt.spec_version == "1.5") or (
+        fmt.type == "SPDX" and fmt.spec_version in ("2.2", "2.3", "3.0.0")
+    )
+    return TRANSITION_NOTE if older else None
+
+
 def _base(fmt: Format) -> dict:
     return {
         "ok": True,
@@ -74,9 +90,9 @@ def schema_invalid_report(fmt: Format, schema: dict) -> dict:
 
 def test_report(fmt: Format, model: Model, outcomes, locator: Locator, max_failures: int | None) -> dict:
     report = _base(fmt)
-    note = _non_conformance_note(fmt)
-    if note:
-        report["notes"].append(note)
+    for note in (_non_conformance_note(fmt), _transition_note(fmt)):
+        if note:
+            report["notes"].append(note)
     report["notes"].append(LIMITATION_NOTE)
 
     tests = []

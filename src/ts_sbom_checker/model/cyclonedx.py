@@ -8,8 +8,11 @@ BSI_FILENAME = "bsi:component:filename"
 BSI_EXECUTABLE = "bsi:component:executable"
 BSI_ARCHIVE = "bsi:component:archive"
 BSI_STRUCTURED = "bsi:component:structured"
-# The BSI taxonomy writes "Licence", table 12 of the TR "License"; both are accepted.
+# The BSI taxonomy writes "Licence" (British English, as the TR text), table 12 of the TR "License";
+# both are accepted.
 BSI_EFFECTIVE_LICENCE = ("bsi:component:effectiveLicence", "bsi:component:effectiveLicense")
+# TR v2.0.0 property, deprecated in the taxonomy for v2.1.0 (replaced by licences with acknowledgement)
+BSI_ASSOCIATED_LICENCES = ("bsi:component:associatedLicences", "bsi:component:associatedLicenses")
 
 
 def _arr(v) -> list:
@@ -203,6 +206,11 @@ def build(data: dict, fmt) -> Model:
         if unacknowledged:
             entries = "entry has" if unacknowledged == 1 else "entries have"
             licence_hints.append(f'{unacknowledged} licence {entries} no "acknowledgement" (concluded/declared)')
+        if _properties(comp, path, BSI_ASSOCIATED_LICENCES):
+            licence_hints.append(
+                'property "bsi:component:associatedLicences" is from TR v2.0.0 and deprecated; '
+                'TR v2.1.0 expects licenses[] with acknowledgement "concluded"'
+            )
 
         components.append(
             Component(
