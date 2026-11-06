@@ -26,6 +26,7 @@ All modules live in `src/ts_sbom_checker/`.
 | Module | Responsibility |
 |---|---|
 | `cli.py` | Command line: reads files / stdin as bytes, calls `check_sbom`, renders text or JSON, sets the exit code. The only module that imports `click` or does I/O. |
+| `textreport.py` | Text rendering of a report for the command line: table of all tests (checked / OK / percentage / failing lines) and, with `--details`, the findings grouped by message; width and encoding aware. Pure functions, no I/O; colours come in as a style callback from `cli.py`. |
 | `check.py` | `check_sbom()`: the pipeline below, input limits (empty, `max_bytes`), mapping of input errors to status 400 / 413, `log.step()` announcements. `preload()`. |
 | `parse.py` | Strict JSON parsing (`json.loads`, no `NaN`/`Infinity`, UTF-8 BOM stripped) and `Locator`: line numbers for JSON paths via a lazy regex token scanner. |
 | `detect.py` | Format and version detection, choice of schema (`Format`). |

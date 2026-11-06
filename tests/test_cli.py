@@ -40,14 +40,71 @@ def test_compliant_file_exits_0(run):
     assert f"ts-sbom-checker {__version__}" in res.output
 
 
-def test_non_compliant_file_exits_1_and_lists_failures(run):
+def test_non_compliant_file_exits_1_and_shows_only_the_table(run):
     res = run(SPDX2)
     assert res.exit_code == 1
     assert "NOT COMPLIANT" in res.output
-    assert (
-        "line 33: util (SPDXRef-util): filename" in res.output.replace(str(FIXTURES), "")
-        or "util (SPDXRef-util): filename" in res.output
-    )
+    lines = res.output.splitlines()
+    header = next(line for line in lines if "Checked / OK" in line)
+    assert "Failing lines" in header
+    row = next(line for line in lines if " component-filename " in line)
+    assert row.split()[-6:] == ["2", "/", "1", "50", "%", "33"]
+    assert header.index("/") == row.index("/")
+    assert any(" component-source-uri " in line and line.rstrip().endswith("n/a") for line in lines)
+    assert "Findings" not in res.output
+    assert "--details" in res.output
+
+
+def test_details_lists_findings_with_components_and_lines(run):
+    res = run("--details", SPDX2)
+    assert "component-filename (TR 5.2.2): 1 of 2 components" in res.output
+    assert "util (33)" in res.output
+
+
+def test_findings_are_grouped_by_message(run, tmp_path):
+    doc = fixture("cdx-1.6-compliant.json")
+    components = [doc["metadata"]["component"], *doc["components"]]
+    for c in components:
+        del c["version"]
+    for c in doc["components"]:  # the bom-ref of each component appears in its message
+        doc["dependencies"] = [d for d in doc["dependencies"] if d["ref"] != c["bom-ref"]]
+    path = tmp_path / "in.json"
+    path.write_text(dump(doc))
+    out = run("--details", str(path)).output
+    assert f"{len(components)}× " in out or f"{len(components)}x " in out
+    version_row = next(line for line in out.splitlines() if " component-version " in line)
+    assert version_row.endswith("all components")
+    deps = out[out.index("component-dependencies (TR") :]
+    assert 'no entry with ref "<bom-ref>"' in deps
+    assert deps.count('no entry with ref "') == 1
+
+
+def test_wrapping_keeps_names_and_lines_together():
+    from ts_sbom_checker.textreport import _wrap
+
+    text = ", ".join(f"charset-normalizer\u00a0({n})" for n in range(1000, 1010))
+    lines = _wrap(text, 40, "  ")
+    assert all("charset-normalizer (" in line for line in lines)
+    assert all(line.count("(") == line.count(")") for line in lines)
+
+
+@pytest.mark.parametrize(("encoding", "mark"), [("utf-8", "✗"), ("ascii", "x")])
+def test_marks_follow_the_output_encoding(encoding, mark):
+    from ts_sbom_checker.textreport import glyphs
+
+    assert glyphs(encoding)["fail"] == mark
+    assert glyphs(None)["fail"] == "x"
+
+
+def test_long_lists_are_shortened_to_the_width():
+    from ts_sbom_checker.textreport import _ASCII, _ellipsis
+
+    parts = [str(n) for n in range(100, 140)]
+    text = _ellipsis(parts, 30, 0, _ASCII)
+    assert len(text) <= 30
+    assert text.endswith(f"(+{40 - text.count(',')})")
+    assert _ellipsis(["a", "b"], 30, 0, _ASCII) == "a, b"
+    assert _ellipsis(["a"], 30, 5, _ASCII) == "a, ... (+5)"
 
 
 @pytest.mark.parametrize(("fail_on", "code"), [("non-compliant", 1), ("schema", 0), ("never", 0)])
