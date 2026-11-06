@@ -74,7 +74,7 @@ use, so compliant documents never pay for it.
 - Release: `release.yml`, triggered by a tag `X.Y.Z` (without "v") or manually with an existing tag. It checks that
   tag, `pyproject.toml` version and a `CHANGELOG.md` entry match, runs the tests, builds sdist and wheel, smoke-tests
   the wheel and uploads to PyPI with the organisation secret `PYPI_TOKEN`. No Docker image is published.
-- Dependency scan: `trustsource-scan.yml` runs `TrustSource/ts-scan-action@v1` on pushes to and pull requests against
+- Dependency scan: `trustsource-scan.yml` runs `TrustSource/ts-scan-action` (v1) on pushes to and pull requests against
   `main` and uploads to the TrustSource project `ts-sbom-checker` (organisation secret `TRUSTSOURCE_API_KEY`).
 - Security linting: `bandit.yml` runs Bandit on `src` (pushes, pull requests, weekly) and writes SARIF. On pushes to
   `main`, scheduled and manual runs the SARIF is imported into TrustSource with `curl`:
@@ -84,6 +84,8 @@ use, so compliant documents never pay for it.
   protection changes, publishes the result (README badge) and uploads SARIF to GitHub code scanning. The optional
   repository secret `SCORECARD_TOKEN` (fine-grained PAT) enables the Branch-Protection check; without it the workflow
   token is used.
+- All actions run on Node 24 (or are Docker/composite actions) and are pinned to commit SHAs with the version as a
+  comment; Dependabot (`.github/dependabot.yml`) updates them weekly in one grouped pull request.
 - Lambda: `eacg-gmbh/ts-lambda`, `sbom-quality/`, Python 3.13, `ts-sbom-checker==X.Y.Z` in `requirements.txt`,
   logging via the `ts-shared-logging` layer. The handler is not part of this repository.
 

@@ -10,6 +10,13 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 - OpenSSF Scorecard workflow (pushes to `main`, weekly, branch protection changes): results published for the README
   badge and uploaded to GitHub code scanning; actions pinned to commit SHAs.
+- Dependabot for GitHub Actions (weekly, grouped), so the pinned SHAs stay current.
+
+### Changed
+
+- GitHub Actions moved off the deprecated Node 20 runtime and pinned to commit SHAs: `actions/checkout` v4 → v7.0.1,
+  `actions/setup-python` v5 → v7.1.0, `actions/upload-artifact` v4 → v7.0.2; `pypa/gh-action-pypi-publish` and
+  `TrustSource/ts-scan-action` pinned as well.
 
 ## [0.2.0] - 2026-11-06
 
