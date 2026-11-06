@@ -1,4 +1,4 @@
-![Supported Versions](https://img.shields.io/badge/Python-%203.12,%203.13,%203.14-blue) [![License](https://img.shields.io/badge/License-Apache--2.0-green)](LICENSE)
+![Supported Versions](https://img.shields.io/badge/Python-%203.12,%203.13,%203.14-blue) [![OpenSSF Scorecard](https://api.scorecard.dev/projects/github.com/TrustSource/ts-sbom-checker/badge)](https://scorecard.dev/viewer/?uri=github.com/TrustSource/ts-sbom-checker) [![License](https://img.shields.io/badge/License-Apache--2.0-green)](LICENSE)
 
 # ts-sbom-checker
 

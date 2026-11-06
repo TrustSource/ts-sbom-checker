@@ -1,0 +1,53 @@
+name: Scorecard supply-chain security
+
+# OpenSSF Scorecard: rates the repository's supply-chain practices, publishes the result for the README badge
+# (https://scorecard.dev/viewer/?uri=github.com/TrustSource/ts-sbom-checker) and uploads the findings to code
+# scanning. With publish_results the job may only use the actions below (checkout, scorecard-action,
+# upload-artifact, codeql-action/upload-sarif), all pinned to a commit SHA.
+
+on:
+  # Branch-Protection check; only the default branch is supported
+  branch_protection_rule:
+  # keeps the Maintained check up to date
+  schedule:
+    - cron: '17 5 * * 1'
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions: read-all
+
+jobs:
+  analysis:
+    name: Scorecard analysis
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write # upload to code scanning
+      id-token: write # publish results for the badge
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      - name: Run analysis
+        uses: ossf/scorecard-action@fa7117db83c52d787ae5a89f350999701505d78e # v2.5.0
+        with:
+          results_file: results.sarif
+          results_format: sarif
+          # SCORECARD_TOKEN (fine-grained PAT, read-only "Administration") is only needed for the Branch-Protection
+          # check; without it the workflow token is used and that check is reported as inconclusive.
+          repo_token: ${{ secrets.SCORECARD_TOKEN || github.token }}
+          publish_results: true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: SARIF file
+          path: results.sarif
+          retention-days: 5
+
+      - name: Upload to code scanning
+        uses: github/codeql-action/upload-sarif@33d7b85da1a04171e211befe2c739303b9a4c066 # v4.39.3
+        with:
+          sarif_file: results.sarif
