@@ -6,6 +6,17 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Changed
+
+- Text output: a table of all tests with checked components, OK components, percentage and failing lines, instead of
+  one line per failing component and test. A test that fails for every component shows "all components"; long lists
+  are shortened to the terminal width.
+
+### Added
+
+- Option `--details`: below the table, the findings of each failed test, grouped by message, with every affected
+  component and its line.
+
 ## [0.1.0] - 2026-11-06
 
 ### Added

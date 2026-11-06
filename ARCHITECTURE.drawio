@@ -14,7 +14,7 @@
         </mxCell>
 
         <!-- entry points -->
-        <mxCell id="cli" value="&lt;b&gt;cli.py&lt;/b&gt;&lt;br&gt;ts-sbom-checker FILE...&lt;br&gt;text / JSON, exit 0/1/2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+        <mxCell id="cli" value="&lt;b&gt;cli.py + textreport.py&lt;/b&gt;&lt;br&gt;ts-sbom-checker FILE...&lt;br&gt;table / JSON, exit 0/1/2" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
           <mxGeometry x="230" y="110" width="170" height="70" as="geometry" />
         </mxCell>
         <mxCell id="lambda" value="&lt;b&gt;Lambda ts-sbom-quality-check&lt;/b&gt;&lt;br&gt;(repo eacg-gmbh/ts-lambda, python3.13)&lt;br&gt;handler + eacg_logutil (layer)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;dashed=1;" vertex="1" parent="1">

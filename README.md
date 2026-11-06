@@ -41,6 +41,7 @@ ts-sbom-checker FILE [FILE ...]     # "-" reads from stdin
   --max-failures N                   list at most N failures per test (default: unlimited)
   --max-schema-errors N              list at most N schema errors (default: unlimited)
   --max-bytes N                      reject files larger than N bytes (default: unlimited)
+  --details                          text output: also list the findings per test with components and lines
   --version
 ```
 
@@ -53,19 +54,37 @@ cyclonedx-npm | ts-sbom-checker -
 ts-sbom-checker --fail-on schema build/*.json      # only fail on schema errors
 ```
 
-Text output (shortened):
+Text output (shortened). The table lists every test with the number of checked components, how many of them are OK
+(also as a percentage) and the lines that failed:
 
 ```
-sbom.spdx.json: SPDX 2.3 - NOT COMPLIANT with BSI TR-03183-2 v2.1.0
-  24 tests: 13 passed, 9 failed, 2 not applicable; 2 components checked
+sbom.cdx.json
+  CycloneDX 1.6: NOT COMPLIANT with BSI TR-03183-2 v2.1.0
+  42 components; 24 tests: 9 passed, 12 failed, 3 not applicable
 
-  FAIL  format-version                  TR 4
-  PASS  sbom-creator                    TR 5.2.1
-  FAIL  component-filename              TR 5.2.2           [1 failed / 2 checked, 0 n/a]
+   #   Test                            TR             Checked / OK    OK %  Failing lines
+  ─────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 ✓ format-version                  4                    1 / 1    100 %
+   2 ✗ sbom-creator                    5.2.1                1 / 0      0 %  1692
+   7 ✗ component-creator               5.2.2               42 / 0      0 %  all components
+   8 ✓ component-name                  5.2.2               42 / 42   100 %
+  20 – component-source-uri            5.2.4                           n/a
+  23 ✗ component-original-licences     5.2.4, 6.1          42 / 31    73 %  27, 189, 324, 378, 567, … (+6)
   ...
-  component-filename (1 failure(s))
-    line 33: util (SPDXRef-util): filename "lib/util-1.4.2.jar" contains a path; only the filename is allowed
 ```
+
+`--details` adds the findings of each failed test, grouped by message, with every affected component and its line:
+
+```
+  component-original-licences (TR 5.2.4, 6.1): 11 of 42 components
+    8×    licence given by name only ("License :: OSI Approved :: Apache Software License"), an SPDX
+          identifier or expression is required (TR 6.1)
+          arrow (27), cyclonedx-bom (324), cyclonedx-python-lib (378), py-serializable (917), ...
+    2×    licence given by name only ("License :: OSI Approved :: BSD License"), ...
+          jsonpointer (567), webcolors (1468)
+```
+
+Colours are used on a terminal only. Where the output encoding cannot carry `✓ ✗ – ×`, ASCII marks are used.
 
 ### Exit codes
 
