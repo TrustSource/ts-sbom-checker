@@ -11,6 +11,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 - OpenSSF Scorecard workflow (pushes to `main`, weekly, branch protection changes): results published for the README
   badge and uploaded to GitHub code scanning; actions pinned to commit SHAs.
 - Dependabot for GitHub Actions (weekly, grouped), so the pinned SHAs stay current.
+- Semgrep workflow (Python and GitHub Actions rules): SARIF result imported into TrustSource (`/core/tests/sarif`) on
+  pushes to `main`, like the Bandit result; findings and a failed import do not fail the run.
 
 ### Changed
 

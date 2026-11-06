@@ -80,6 +80,12 @@ use, so compliant documents never pay for it.
   `main`, scheduled and manual runs the SARIF is imported into TrustSource with `curl`:
   `POST <TS_API_BASE_URL>/core/tests/sarif` (base URL `https://api.trustsource.io/v2`, header `x-api-key`, query
   `projectName` / `moduleName` `ts-sbom-checker`, `branch`, `tag` = commit SHA). Pull requests only scan.
+- Static analysis: `semgrep.yml` runs Semgrep OSS (rulesets `p/python`, `p/github-actions`) on `src` and `.github`
+  with the same triggers; findings do not fail the job. The SARIF is imported into TrustSource the same way as the
+  Bandit result, best effort (`continue-on-error`).
+- Branch protection on `main`: pull request with one approving review (stale approvals dismissed, conversations
+  resolved), required checks `lint` and `test (3.12)` / `(3.13)` / `(3.14)`, no force pushes or deletions, enforced
+  for administrators. Only `jthDEV` may bypass the pull request requirement (e.g. for release commits).
 - Supply-chain rating: `scorecard.yml` runs the OpenSSF Scorecard on pushes to `main`, weekly and on branch
   protection changes, publishes the result (README badge) and uploads SARIF to GitHub code scanning. The optional
   repository secret `SCORECARD_TOKEN` (fine-grained PAT) enables the Branch-Protection check; without it the workflow
