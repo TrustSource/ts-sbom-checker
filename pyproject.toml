@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ts-sbom-checker"
-version = "0.1.0"
+version = "0.2.0"
 description = "Checks SBOMs (CycloneDX, SPDX) against their JSON schema and the requirements of BSI TR-03183-2"
 readme = "README.md"
 license = { text = "Apache-2.0" }

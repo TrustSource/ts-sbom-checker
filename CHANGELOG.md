@@ -6,6 +6,8 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-11-06
+
 ### Changed
 
 - Text output: a table of all tests with checked components, OK components, percentage and failing lines, instead of
@@ -47,5 +49,6 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
   - Report note on the transitional rule (TR section 7) for CycloneDX 1.5, SPDX 2.2 / 2.3 and SPDX 3.0.0.
   - README: XML is permitted by the TR but not read; logical primary components; notes on the TR text.
 
-[Unreleased]: https://github.com/TrustSource/ts-sbom-checker/compare/0.1.0...HEAD
+[Unreleased]: https://github.com/TrustSource/ts-sbom-checker/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/TrustSource/ts-sbom-checker/compare/0.1.0...0.2.0
 [0.1.0]: https://github.com/TrustSource/ts-sbom-checker/releases/tag/0.1.0
