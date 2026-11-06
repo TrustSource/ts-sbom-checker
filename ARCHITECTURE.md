@@ -80,6 +80,10 @@ use, so compliant documents never pay for it.
   `main`, scheduled and manual runs the SARIF is imported into TrustSource with `curl`:
   `POST <TS_API_BASE_URL>/core/tests/sarif` (base URL `https://api.trustsource.io/v2`, header `x-api-key`, query
   `projectName` / `moduleName` `ts-sbom-checker`, `branch`, `tag` = commit SHA). Pull requests only scan.
+- Supply-chain rating: `scorecard.yml` runs the OpenSSF Scorecard on pushes to `main`, weekly and on branch
+  protection changes, publishes the result (README badge) and uploads SARIF to GitHub code scanning. The optional
+  repository secret `SCORECARD_TOKEN` (fine-grained PAT) enables the Branch-Protection check; without it the workflow
+  token is used.
 - Lambda: `eacg-gmbh/ts-lambda`, `sbom-quality/`, Python 3.13, `ts-sbom-checker==X.Y.Z` in `requirements.txt`,
   logging via the `ts-shared-logging` layer. The handler is not part of this repository.
 

@@ -6,6 +6,11 @@ The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and
 
 ## [Unreleased]
 
+### Added
+
+- OpenSSF Scorecard workflow (pushes to `main`, weekly, branch protection changes): results published for the README
+  badge and uploaded to GitHub code scanning; actions pinned to commit SHAs.
+
 ## [0.2.0] - 2026-11-06
 
 ### Changed
